@@ -1,0 +1,12 @@
+
+*.ipch
+*.sdf
+*.log
+x64/Debug/RCa05384
+x64/Debug/RCa01768
+*.ilk
+*.obj
+*.pdb
+*.tlog
+*.idb
+*.APS
