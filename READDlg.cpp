@@ -192,26 +192,31 @@ HCURSOR CREADDlg::OnQueryDragIcon()
 
 void CREADDlg::OnBnClickedDrawbutton()
 {
-	UpdateData(TRUE);
-	CWnd *picture = this->GetDlgItem(IDC_PictureSTATIC); //拿到该控件的窗kou指针
+
+	CWnd *picture = this->GetDlgItem(IDC_PictureSTATIC); //拿到该控件的窗口指针
 	CRect prect;			//
 	picture->GetWindowRect(&prect); //拿到它的矩形区域（包括坐标和大小）
 	ScreenToClient(&prect);	//映射到客户区坐标
-
-	CDC *pdc= picture->GetDC();	//拿到该空间的DC	
-	CBrush brush(RGB(255,0,0));// 建一个画刷
+	CDC *pdc= picture->GetDC();	//拿到该控件的DC	
+	CBrush brush(RGB(350,350,350));// 建一个画刷
 	pdc->SelectObject(&brush);//绑定该画刷
-	pdc->MoveTo(CPoint(0, 0));//移动到原点  开始绘图
+	pdc->MoveTo(CPoint(0, 0.5*prect.Height()));//移动到原点  开始绘图//图板宽度=289
 	pdc->Rectangle(0, 0, prect.Width(), prect.Height());
-
-	for (int i = 0; i <= prect.Width(); i+=10)
+	/*for (int i = 0; i <= prect.Width(); i+=1)
 	{
-		int y = prect.Height()*0.5* sin(10*i)+0.5* prect.Height();
-		
+		int y = prect.Height()*0.5* sin(1*i)+0.5* prect.Height();	
 		pdc->LineTo(CPoint(i, y));
+	}*///画正弦波
+	/*double aaa = prect.Width();
+	double bbb = prect.Height();
+	m_Mass = aaa;
+	m_Stiff = bbb;
+	UpdateData(FALSE);*///查看画板尺寸
+	for (int i = 0; i<=m_Values.size()-1; i++)
+	{
+		int y =50 * m_Values[i] + 0.5*prect.Height();
+		pdc->LineTo(CPoint(0.05*i, y));
 	}
-	
-	
 	ReleaseDC(pdc);
 }
 
@@ -266,7 +271,8 @@ void CREADDlg::OnBnClickedDisplaybutton()
 			if (*pChars == '\r' && *(pChars+1)=='\n')  //如果读到的字符是转行和新行符（即完整的换行符），就表示读了一行
 			{
 				char temp[20] = {'0'};		//新建临时字符数组用来存储该行内容
-				memcpy(temp, fomerPchars+lines_Start,i-lines_Start);	//存储该行内容，lines_Start表示该行起点处在文件中的地址，加上fomerPchars就是该行的内存地址（lines_Start从 0开始，fomerPchars才是地址的起始量 ）
+				memcpy(temp, fomerPchars+lines_Start,i-lines_Start);	//存储该行内容，lines_Start表示该行起点处在文件中的地址，
+				                                       //加上fomerPchars就是该行的内存地址（lines_Start从 0开始，fomerPchars才是地址的起始量 ）
 				temp[19] = '\0';	//规定临时字符数组的最后一个字节是0结尾 可要可不要
 				
 				double dd = atof(temp);// double dd=atof(temp); 将字符数组中的字符串转换成double值
@@ -284,7 +290,8 @@ void CREADDlg::OnBnClickedDisplaybutton()
 		CString temp;
 		bool is_continue_zero = false;
 		int non_zero_index = 0;
-		for (int i = 0; i < m_Values.size(); i++)		//看看结果数组末尾是否有零 ，结尾一直是零的话，non_zero_index就会不增加 从而得到真正的数组大小
+		for (int i = 0; i < m_Values.size(); i++)		//看看结果数组末尾是否有零 ，结尾一直是零的话，non_zero_index就会不增加 
+			                                                           //从而得到真正的数组大小
 		{
 			
 			is_continue_zero = m_Values[i]==0 ? true : false;

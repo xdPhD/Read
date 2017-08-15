@@ -10,3 +10,5 @@ x64/Debug/RCa01768
 *.tlog
 *.idb
 *.APS
+*.exe
+*.pch
